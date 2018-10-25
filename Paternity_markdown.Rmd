@@ -1,0 +1,83 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
+
+Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Cmd+Shift+Enter*. 
+
+```{r}
+library(tidyverse)
+library(dplyr)
+PData <- read.csv("EU.csv")
+datatypelist <- data.frame(cbind(lapply(PData, class))) #checking data is read correctly
+summary(PData) #summary / descriptive statistics
+
+library(maptools)
+library(ggplot2)
+library(sp)
+library(classInt)
+install.packages('spDataLarge', repos='https://nowosad.github.io/drat/', type='source')
+library(spDataLarge)
+library(OpenStreetMap)
+library(tmap)
+library(RColorBrewer)
+library(rgeos)
+library(tmaptools)
+library(sf)
+library(downloader)
+library(rgdal)
+library(methods)
+library(shinyjs)
+library(ggmap)
+
+#making choropleth maps
+EUmap <- read_shape("european-union-countries.shp", as.sf = TRUE)
+qtm(EUmap)
+#how do I crop the map
+
+#join the attributedata to the boundary data
+EUmapData <- append_data(EUmap, PData, key.shp = "geounit", key.data = "country", ignore.duplicates = TRUE)
+
+tmap_mode("plot")
+qtm(EUmapData, fill = "Paid_paternity_2016")
+qtm(EUmapData, fill = "Paid_paternity_2016", fill.palette = "-Reds") # I inverse colours by adding - before the colour code
+# how do I remove 'missing' from my map and legend: missing data at index: 5, 6, 7, 8, 9
+
+# how do I add a watercolour basemap
+# ?get_stamenmap
+# ggmap(get_stamenmap(bbox, maptype = "watercolor", zoom = 14))
+# map <- get_stamenmap(bbox = c(left = -95.80204, bottom = 29.38048, right = -94.92313, top = 30.14344), zoom = 10, maptype = c("watercolor"))
+
+
+# INTERACTIVE MAP
+tm_shape(EUmapData) + tm_polygons("Paid_paternity_2016", style="jenks", palette="-Reds", midpoint=NA, title="Paid Paternity Leave in EU in weeks (2016)")
+tmap_save(filename = "paternity_eu.html")
+
+# GGPLOT2 MAPS
+geom_polygon(aes(x=x, y=y), data.frame)
+ggplot()+geom_sf(mapping = aes(geometry=geometry), data = EUmapData)+theme_minimal()
+ggplot()+geom_sf(mapping = aes(geometry=geometry, fill=Paid_paternity_2016), data = EUmapData)+theme_minimal()
+palette1 <- scale_fill_continuous(low="red", high="orange", "Weeks (2016)")
+labels <- labs(list(title="Paid Paternity Leave in the EU", x="Longitude", y="Latitude"))
+ggplot()+geom_sf(mapping = aes(geometry=geometry, fill=Paid_paternity_2016), data = EUmapData)+theme_minimal()+palette1+labels+coord_sf(xlim=c(-10, 35), ylim=c(35, 70))
+# this code crops my map: coord_sf(xlim=c(-10, 35), ylim=c(35, 70))
+# how do I make the legend intervals/boxes, not graduated colour?
+
+#checking coordinate reference systems
+print(EUmapData)
+```
+
+Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Cmd+Option+I*.
+```{r}
+
+```
+
+When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the *Preview* button or press *Cmd+Shift+K* to preview the HTML file). 
+```{r}
+
+```
+
+The preview shows you a rendered HTML copy of the contents of the editor. Consequently, unlike *Knit*, *Preview* does not run any R code chunks. Instead, the output of the chunk when it was last run in the editor is displayed.
+
