@@ -1,3 +1,4 @@
+
 ---
 title: "Creating a Map of Paternity Leave in the EU"
 
@@ -85,7 +86,7 @@ Finally, a the same map was done using the ggplot2 package.
 # ggplot()+geom_sf(mapping = aes(geometry=geometry), data = EUmapData)+theme_minimal()
 # ggplot()+geom_sf(mapping = aes(geometry=geometry, fill=Paid_paternity_2016), data = EUmapData)+theme_minimal()
 palette1 <- scale_fill_continuous(low="red", high="orange", "Weeks (2016)")
-labels <- labs(list(title="Paid Paternity Leave in the EU", x="Longitude", y="Latitude"))
+labels <- labs(list(title="Paid Paternity Leave Entitlement in the EU", x="Longitude", y="Latitude"))
 ggplot()+geom_sf(mapping = aes(geometry=geometry, fill=Paid_paternity_2016), data = EUmapData)+theme_minimal()+palette1+labels+coord_sf(xlim=c(-10, 35), ylim=c(35, 70))
 # this code crops my map: coord_sf(xlim=c(-10, 35), ylim=c(35, 70))
 
