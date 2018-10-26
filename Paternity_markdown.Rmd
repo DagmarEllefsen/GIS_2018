@@ -19,6 +19,9 @@ This is where I will write 600 words comparing QGIS and R
 
 The data for my map was found here: insert reference
 
+source: OECD - Social Policy Division - Directorate of Employment, Labour and Social Affairs.
+Information refers to entitlements to paternity leave or periods of parental leave that can be used only by the father and cannot be transferred to the mother. Data reflect entitlements at the national or federal level only, and do not reflect regional variations.
+
 ```{r}
 library(tidyverse)
 library(dplyr)
@@ -91,7 +94,11 @@ ggplot()+geom_sf(mapping = aes(geometry=geometry, fill=Paid_paternity_2016), dat
 # print(EUmapData) #checking coordinate reference systems
 ```
 
-The preview shows you a rendered HTML copy of the contents of the editor. Consequently, unlike *Knit*, *Preview* does not run any R code chunks. Instead, the output of the chunk when it was last run in the editor is displayed.
+Building the same map in QGIS .... 
+```{r echo=FALSE, out.width='100%'}
+knitr::include_graphics('./Paternity leave in the EU.jpeg')
+```
+
 
 ```{r}
 library(citr)
