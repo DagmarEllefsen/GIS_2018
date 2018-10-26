@@ -1,11 +1,15 @@
 ---
-title: "R Notebook"
-output: html_notebook
+title: "Creating a Map of Paternity Leave in the EU"
+subtitle: "A comparison of QGIS and R when developing maps"
+author: Dagmar Bernt Ellefsen
+affiliation: University College London
+date: "`r format(Sys.time(), '%d %B %Y')`"
+output: 
+  html_notebook
+  pdf_document
 ---
 
-This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
-
-Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Cmd+Shift+Enter*. 
+This is where I will write 600 words comparing QGIS and R
 
 ```{r}
 library(tidyverse)
@@ -18,7 +22,7 @@ library(maptools)
 library(ggplot2)
 library(sp)
 library(classInt)
-install.packages('spDataLarge', repos='https://nowosad.github.io/drat/', type='source')
+#install.packages('spDataLarge', repos='https://nowosad.github.io/drat/', type='source')
 library(spDataLarge)
 library(OpenStreetMap)
 library(tmap)
@@ -34,23 +38,30 @@ library(ggmap)
 
 #making choropleth maps
 EUmap <- read_shape("european-union-countries.shp", as.sf = TRUE)
-qtm(EUmap)
-#how do I crop the map
+qtm(EUmap) #showing the shapefile
 
 #join the attributedata to the boundary data
 EUmapData <- append_data(EUmap, PData, key.shp = "geounit", key.data = "country", ignore.duplicates = TRUE)
-
+# plotting the joined data
 tmap_mode("plot")
 qtm(EUmapData, fill = "Paid_paternity_2016")
 qtm(EUmapData, fill = "Paid_paternity_2016", fill.palette = "-Reds") # I inverse colours by adding - before the colour code
+
 # how do I remove 'missing' from my map and legend: missing data at index: 5, 6, 7, 8, 9
+
+#how do I crop the map
 
 # how do I add a watercolour basemap
 # ?get_stamenmap
 # ggmap(get_stamenmap(bbox, maptype = "watercolor", zoom = 14))
 # map <- get_stamenmap(bbox = c(left = -95.80204, bottom = 29.38048, right = -94.92313, top = 30.14344), zoom = 10, maptype = c("watercolor"))
 
+# how do I edit legend, add title, measuring bar, arrow etc??
 
+```
+
+Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Cmd+Option+I*.
+```{r}
 # INTERACTIVE MAP
 tm_shape(EUmapData) + tm_polygons("Paid_paternity_2016", style="jenks", palette="-Reds", midpoint=NA, title="Paid Paternity Leave in EU in weeks (2016)")
 tmap_save(filename = "paternity_eu.html")
@@ -67,11 +78,6 @@ ggplot()+geom_sf(mapping = aes(geometry=geometry, fill=Paid_paternity_2016), dat
 
 #checking coordinate reference systems
 print(EUmapData)
-```
-
-Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Cmd+Option+I*.
-```{r}
-
 ```
 
 When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the *Preview* button or press *Cmd+Shift+K* to preview the HTML file). 
